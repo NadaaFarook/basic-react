@@ -1,50 +1,52 @@
 import React from 'react'
-import DisplayName from './displayName'
-class App extends React.Component{
-  
-  
-  state = {
-    Names:[
-      {category: "Sporting Goods", price: "$49.99", stocked: true, name: "football"},
-      {category: "Sporting Goods", price: "$9.99", stocked: true, name: "baseball"},
-      {category: "Sporting Goods", price: "$29.99", stocked: false, name: "basketball"},
-      {category: "Electronics", price: "$99.99", stocked: true, name: "iPod Touch"},
-      {category: "Electronics", price: "$399.99", stocked: false, name: "iPhone 5"},
-      {category: "Electronics", price: "$199.99", stocked: true, name: "nexus 7"}
-    ],
-    input:'',
-    switch: false , 
-  }
-  acceptChange=(e)=>{
-    this.setState({
-      input: e.target.value
-    })
-    
-  }
-  
-  acceptCheck = ()=>{
-    if(this.state.switch === false){
-      this.setState({
-        switch : true
-      })
-    }else {
-      this.setState({
-        switch : false
-      })
-    }
-  }
+import Todo from './todo'
 
+
+class App extends React.Component{
+  state={
+    Todos:[
+      {id:1, message:'Do the dishes' , completed:true},
+      {id:2, message:'Get some groceries',completed:false},
+      {id:3, message:'Do homework',completed:true}
+    ],
+    
+    input: '',
+  }
+  
+  acceptInput=(e)=>{
+    let inputss = {message:e.target.value , id: Math.random()}
+    this.setState({
+      input: inputss ,
+    })
+  }
+  updateTodo = (e)=>{
+    e.preventDefault()
+    let Todos = [...this.state.Todos , this.state.input]
+    this.setState({
+      Todos: Todos
+    })
+  }
+  deleteTodo = (id)=>{
+    let Todo = this.state.Todos.filter(e =>{
+      return e.id !== id
+    })
+    this.setState({Todos:Todo})
+  }
+  
 
 
   render(){
     return(
-      <div className="mx-4 my-4">
-        <div className="flex flex-col">
-        <input type="text" className="mx-4 my-4 border-b-2 border-gray-900 outline-none" placeholder="Search" onChange={this.acceptChange}/>
-        <label htmlFor="checkbox">Stock Available</label>
-        <input type="checkbox"  name="Stock Available" placeholder="stock" id="checkbox" onChange={this.acceptCheck}/>
-        </div>
-        <DisplayName stay={this.state.Names} input={this.state.input} swtch={this.state.switch} />
+      <div className=" m-1">
+        <h1 className="bg-blue-700 text-white py-4 text-center text-2xl">MY DAILY TODOS</h1>
+    <p className="bg-blue-400 text-white text-center uppercase py-2 m-1">Only {Object.keys(this.state.Todos).length} left!!</p>
+        <Todo todos={this.state.Todos} delTodo={this.deleteTodo} />
+        <form onSubmit={this.updateTodo}>
+        <input className="mx-1 my-1 px-1 py-1 border-b-2 border-green-300 outline-none w-50" type="text" id="inputtodo" onChange={this.acceptInput} />
+        <button className="bg-green-300 text-white ml-10 p-2">Add Todo</button>
+        
+        </form>
+        
       </div>
     )
   }
